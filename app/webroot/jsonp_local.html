@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+ <head>
+  <title>HEC - BDMC - SQL Explorer</title>
+  <link rel="stylesheet" type="text/css" media="screen" href="http://hec.unil.ch/info1ere/css/style.css" />
+  <script type="text/javascript" src="http://hec.unil.ch/info1ere/codemirror/js/codemirror.js"></script>
+  <script type="text/javascript" src="http://hec.unil.ch/info1ere/js/js-all-min.js"></script>
+<script type="text/javascript">
+function sendQuery(){
+	var query = sql.getCode();
+	var ajax = $.ajax({
+	    url: 'http://hec.unil.ch/info1ere/questions/evaluate/0',
+		data: 'sql=' + encodeURIComponent(query) +'&assignment=policlinique&questionNb=none',
+	    dataType: 'jsonp',
+	    timeout: 5000,
+	    error: function(){
+	        alert('Erreur de communication avec le serveur!');
+	    },
+	    success: function(eval){
+			addSqlHistory(query);	
+			showDataGrid(eval.data);
+			if(eval.result == 'correct'){
+				questionPassed();				
+			}
+	    }
+	});
+	return false;
+}
+</script>
+
+ </head>
+ <body>
+<h1><span>SQL</span> Explorer</h1>
+<div id="dropDown">
+<form name="dropDownForm" method="get" action="">
+<p>Exercice:&nbsp;
+<select id="assignment" name="assignment" onchange="submit();"> 
+			<option value="aeroclub" >aeroclub</option>		
+			<option value="armateur" >armateur</option>		
+			<option value="associations" >associations</option>		
+			<option value="atelierfabrication" >atelierfabrication</option>		
+			<option value="cinema" >cinema</option>		
+			<option value="classes" >classes</option>		
+			<option value="contraintesintegrite" >contraintesintegrite</option>		
+			<option value="coursedepatrouilles" >coursedepatrouilles</option>		
+			<option value="employedepartement" >employedepartement</option>		
+			<option value="entrepotdonnees" >entrepotdonnees</option>		
+			<option value="entrepotdonneesnew" >entrepotdonneesnew</option>		
+			<option value="fabriquefiltres" >fabriquefiltres</option>		
+			<option value="garage" >garage</option>		
+			<option value="heritageetcycles" >heritageetcycles</option>		
+			<option value="leconsdeski" selected="selected">leconsdeski</option>		
+			<option value="livre" >livre</option>		
+			<option value="magasin" >magasin</option>		
+			<option value="palettespapier" >palettespapier</option>		
+			<option value="policlinique" >policlinique</option>		
+			<option value="radiolocale" >radiolocale</option>		
+			<option value="sandbox" >sandbox</option>		
+			<option value="spectacle" >spectacle</option>		
+			<option value="tableaucroisedynamique" >tableaucroisedynamique</option>		
+			<option value="tennis" >tennis</option>		
+			<option value="usine" >usine</option>		
+			<option value="validation" >validation</option>		
+	</select></p></form>
+
+</div>		
+<h2><a href="#" onclick="toggleSection(this)" class="off">Questions</a></h2>
+<div id="questions" style="display:none;">
+<a class="" href="?assignment=leconsdeski&question=01">01</a><a class="" href="?assignment=leconsdeski&question=02">02</a><a class="" href="?assignment=leconsdeski&question=03">03</a><a class="" href="?assignment=leconsdeski&question=04">04</a><a class="" href="?assignment=leconsdeski&question=05">05</a><a class="" href="?assignment=leconsdeski&question=06">06</a><a class="" href="?assignment=leconsdeski&question=07">07</a><a class="" href="?assignment=leconsdeski&question=08">08</a><a class="" href="?assignment=leconsdeski&question=09">09</a><a class="" href="?assignment=leconsdeski&question=10">10</a><a class="" href="?assignment=leconsdeski&question=11">11</a><a class="" href="?assignment=leconsdeski&question=12">12</a><a class="" href="?assignment=leconsdeski&question=13">13</a><a class="" href="?assignment=leconsdeski&question=14">14</a><a class="" href="?assignment=leconsdeski&question=15">15</a><a class="" href="?assignment=leconsdeski&question=16">16</a><a class="" href="?assignment=leconsdeski&question=17">17</a><a class="" href="?assignment=leconsdeski&question=18">18</a><a class="" href="?assignment=leconsdeski&question=19">19</a><a class="" href="?assignment=leconsdeski&question=20">20</a><a class="" href="?assignment=leconsdeski&question=21">21</a><a class="" href="?assignment=leconsdeski&question=22">22</a><a class="" href="?assignment=leconsdeski&question=23">23</a><div id="question"></div>
+
+</div>
+<div id="error" class="error"></div>  
+ <form id="queryForm" name="queryForm" method="post" action="excel.php">
+  <div id="toolbar">
+  	<div class="clear"></div>
+  	<a id="buttonSendQuery" onclick="sendQuery();" title="Ex�cuter la requ�te SQL">Ex�cuter</a>
+  	<a id="contentLoading" title="R�sultat en cours de chargement, veuillez patienter"></a>
+  	<div class="separator">&nbsp;</div>
+  	<a id="buttonCSV" title="R�sultat sous forme de fichier csv/excel"></a>
+  	<div class="separator">&nbsp;</div>
+
+  	<a id="buttonUndo" class="buttonOn" title="Annuler"></a>
+  	<a id="buttonRedo" class="buttonOn" title="Refaire" ></a>
+  	<div class="clear"></div>
+  </div>
+  <div id="sql-div"><textarea id="sql" name="sql" style="width: 100%; height: 174px;"></textarea></div>
+  <input type="hidden" name="assignment" value="leconsdeski"/>
+ </form>
+<h2><a href="#" onclick="toggleSection(this)" class="on">R�sultat</a></h2>
+
+<div id="datagrid"></div>
+<h2><a href="#" onclick="toggleSection(this)" class="on">Historique</a></h2>
+<div id="history-div">
+ <table class="display"><thead><tr>
+ <th>No</th><th>Requ�te</th>
+ </tr></thead><tbody id="history"></tbody>
+ <tfoot><tr><th></th><th><a href="#" onclick="toggleHistory(this); return false;" class="off">voir plus</a></th></tr></tfoot>
+ </table>
+
+</div> 
+<h2><a href="#" onclick="toggleSection(this)" class="on">Sch�ma</a></h2>
+<img id="schema" src="http://hec.unil.ch/info1ere/img/schema_leconsdeski.png" /> </body>
+</html>
