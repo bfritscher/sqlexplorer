@@ -9,7 +9,7 @@ Screenshots
 
 ![slides](screenshots/slide_mode_with_live_eval.png)
 
-[[More screens|Screenshots]]
+[More screens](https://github.com/bfritscher/sqlexplorer/wiki/Screenshots)
 
 Some Pointers
 --------------------
