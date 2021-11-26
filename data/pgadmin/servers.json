@@ -2,9 +2,9 @@
   "Servers": {
     "1": {
       "Name": "SQL Explorer",
-      "Group": "Server",
+      "Group": "Servers",
       "Port": 5432,
-      "Username": "sqlexploreradmin",
+      "Username": "postgres",
       "Host": "postgres",
       "SSLMode": "prefer",
       "MaintenanceDB": "postgres"
