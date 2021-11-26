@@ -1,0 +1,71 @@
+version: '3.8'
+services:
+  redis:
+    image: redis
+    restart: always
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_DB=sqlexplorer
+  backend:
+    build: .
+    restart: always
+    volumes:
+      - ./data/schema_pics:/app/schema_pics
+    environment:
+      - NODE_ENV=production
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web"
+      - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.https_redirect.redirectscheme.permanent=true"
+      - "traefik.http.services.sqlexplorer.loadbalancer.server.port=3000"
+      - "traefik.http.routers.sqlexplorer.rule=Host(`sqlexplorer.j42.org`)"
+      - "traefik.http.routers.sqlexplorer.entrypoints=web"
+      - "traefik.http.routers.sqlexplorer.middlewares=https_redirect"
+      - "traefik.http.routers.sqlexplorer_secured.rule=Host(`sqlexplorer.j42.org`)"
+      - "traefik.http.routers.sqlexplorer_secured.entrypoints=websecure"
+      - "traefik.http.routers.sqlexplorer_secured.tls=true"
+      - "traefik.http.routers.sqlexplorer_secured.tls.certresolver=myresolver"
+    networks:
+      - web
+      - default
+    command: 'npm run start'
+    depends_on:
+      - redis
+      - postgres
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    volumes:
+      - ./data/pgadmin/servers.json:/pgadmin4/servers.json
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=sqlexploreradmin@example.com
+      - PGADMIN_DEFAULT_PASSWORD=password
+      - PGADMIN_DISABLE_POSTFIX=true
+      - SCRIPT_NAME=/pgadmin
+      - PGADMIN_CONFIG_MAX_LOGIN_ATTEMPTS=10
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web"
+      - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.https_redirect.redirectscheme.permanent=true"
+      - "traefik.http.services.sqlexplorer_pgadmin.loadbalancer.server.port=80"
+      - "traefik.http.routers.sqlexplorer_pgadmin.rule=Host(`sqlexplorer.j42.org`) && PathPrefix(`/pgadmin`)"
+      - "traefik.http.routers.sqlexplorer_pgadmin.entrypoints=web"
+      - "traefik.http.routers.sqlexplorer_pgadmin.middlewares=https_redirect"
+      - "traefik.http.routers.sqlexplorer_pgadmin_secured.rule=Host(`sqlexplorer.j42.org`) && PathPrefix(`/pgadmin`)"
+      - "traefik.http.routers.sqlexplorer_pgadmin_secured.entrypoints=websecure"
+      - "traefik.http.routers.sqlexplorer_pgadmin_secured.tls=true"
+      - "traefik.http.routers.sqlexplorer_pgadmin_secured.tls.certresolver=myresolver"
+    networks:
+      - web
+      - default
+    depends_on:
+      - postgres
+networks:
+  web:
+    external: true

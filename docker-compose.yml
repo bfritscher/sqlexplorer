@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  redis:
+    image: redis
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_DB=sqlexplorer
+  backend:
+    build: .
+    volumes:
+      - ./data/schema_pics:/app/schema_pics
+      - ./frontend/dist:/app/public
+      # dev
+      - ./backend/lti:/app/lti
+      - ./backend/config:/app/config
+      - ./backend/server.js:/app/server.js
+    environment:
+      - NODE_ENV=development
+    command: 'npm run dev'
+    ports:
+      - "9229:9229"
+      - "3000:3000"
+    depends_on:
+      - redis
+      - postgres
+  proxy:
+    build: ./proxy
+    environment:
+      - PROXY_ADDRESS=http://backend:3000 # Important, don't use quotations here, or it may break the template
+    ports:
+      - 443:443
+    depends_on:
+      - backend

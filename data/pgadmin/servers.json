@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "SQL Explorer",
+      "Group": "Server",
+      "Port": 5432,
+      "Username": "sqlexploreradmin",
+      "Host": "postgres",
+      "SSLMode": "prefer",
+      "MaintenanceDB": "postgres"
+    }
+  }
+}

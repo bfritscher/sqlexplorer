@@ -1,0 +1,4 @@
+node_modules
+data/frontend
+config/env.*
+!config/env.sample.js
