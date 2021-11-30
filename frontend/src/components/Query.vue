@@ -593,6 +593,8 @@ export default {
         .then((data) => {
           if (data.id !== payload.id) {
             router.push(`/admin/${payload.db_schema}/${data.id}`);
+          } else {
+            loadAdminQuestion();
           }
           this.saveSuccess = true;
           setTimeout(() => {
@@ -658,6 +660,16 @@ export default {
       { immediate: true }
     );
 
+    function loadAdminQuestion() {
+     fetch(`${API_URL}/api/question/${route.params.questionId}`, {
+            credentials: "include",
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              question.value = data;
+            });
+    }
+
     watch(
       () => route.params.questionId,
       () => {
@@ -665,13 +677,7 @@ export default {
           route.params.questionId &&
           route.params.questionId !== question.value.id
         ) {
-          fetch(`${API_URL}/api/question/${route.params.questionId}`, {
-            credentials: "include",
-          })
-            .then((res) => res.json())
-            .then((data) => {
-              question.value = data;
-            });
+          loadAdminQuestion();
         } else if (!route.params.questionId && question.value.id) {
           delete question.value.id;
           question.value.text = "";
