@@ -318,7 +318,7 @@ app.get(
        WHERE q.id = $1`,
       [req.params.id]
     );
-    if (result.rows.length > 0) {
+    if (result && result.rows.length > 0) {
       res.json(result.rows[0]);
     } else {
       res.sendStatus(404);
@@ -933,7 +933,9 @@ async function getQuestionsByKeywords(req, res) {
   }
 
   const result = await executeQuery(res, sql, keywords);
-  res.json(result.rows);
+  if (result) {
+    res.json(result.rows);
+  }
 }
 
 function upsertQuestion(req, res) {
