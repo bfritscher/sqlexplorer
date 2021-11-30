@@ -727,7 +727,10 @@ async function evaluateQuery(req, res, csv) {
   const sqlToTest = req.body.sql.replace(/;/g, "");
   let resultUser;
   try {
-    resultUser = await client.query(sqlToTest);
+    resultUser = await client.query({
+      text: sqlToTest,
+      rowMode: "array"
+    });
     if (resultUser.rowCount > 0) {
       data.headers = resultUser.fields.map((h) => h.name);
       // limit output to 1000 rows and replace null with string 'NULL'
