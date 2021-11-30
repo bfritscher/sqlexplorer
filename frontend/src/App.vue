@@ -229,6 +229,11 @@ textarea {
   display: none !important;
 }
 
+.print-page *:hover,
+.print-page *:hover * {
+    background-color: inherit !important;
+  }
+
 @media print {
   .print-hide,
   .print-hide * {
