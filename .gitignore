@@ -1,3 +1,4 @@
 .vscode
 data/schema_pics
 data/frontend
+postgres/data
