@@ -81,6 +81,16 @@
         >
           <button class="btn icon-left outline"><EyeSolid /> View</button>
         </router-link>
+        <router-link
+          v-if="assignment"
+          :to="`/admin/assignments/${assignment.id}/slide`"
+          class="text-decoration-none"
+          target="_blank"
+        >
+          <button class="btn icon-left outline">
+            <Presentation /> Present
+          </button>
+        </router-link>
       </div>
       <draggable
         v-model="assignment.questions"
@@ -116,6 +126,7 @@ import TableSolid from "../../assets/icons/table-solid.svg";
 import PrintSolid from "../../assets/icons/print-solid.svg";
 import EyeSolid from "../../assets/icons/eye-solid.svg";
 import PlusSolid from "../../assets/icons/plus-solid.svg";
+import Presentation from "../../assets/icons/presentation.svg";
 
 import { API_URL } from "../../config";
 
@@ -128,6 +139,7 @@ export default {
     PrintSolid,
     EyeSolid,
     PlusSolid,
+    Presentation,
   },
   setup() {
     const route = useRoute();

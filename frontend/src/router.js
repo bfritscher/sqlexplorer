@@ -8,6 +8,8 @@ const Questions = () => import("./components/admin/Questions.vue");
 const Assignments = () => import("./components/admin/Assignments.vue");
 const AssignmentsPrint = () =>
   import("./components/admin/AssignmentsPrint.vue");
+const AssignmentsSlide = () =>
+  import("./components/admin/AssignmentsSlide.vue");
 const LtiSelect = () => import("./components/admin/LtiSelect.vue");
 
 const routes = [
@@ -22,6 +24,11 @@ const routes = [
     path: "/admin/assignments/:id/print/:showData?",
     name: "print",
     component: AssignmentsPrint,
+  },
+  {
+    path: "/admin/assignments/:id/slide",
+    name: "slide",
+    component: AssignmentsSlide,
   },
   { path: "/admin/questions", redirect: "/admin/questions/ALL" },
   {

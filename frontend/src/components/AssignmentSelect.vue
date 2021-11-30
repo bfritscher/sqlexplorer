@@ -8,7 +8,7 @@
       :reduce="(assignment) => assignment.id"
       :getOptionLabel="
         (assignment) =>
-          `${assignment.name} / ${assignment.course}  ${assignment.year} [ ${assignment.nb} ]`
+          `${assignment.name} / ${assignment.course}  (${assignment.year}) [ ${assignment.nb} ]`
       "
       @update:modelValue="$emit('update:modelValue', $event)"
     >

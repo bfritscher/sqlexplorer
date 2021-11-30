@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   aria-hidden="true"
+   focusable="false"
+   data-prefix="fas"
+   data-icon="presentation"
+   class="svg-inline--fa fa-w-16"
+   role="img"
+   viewBox="0 0 512 512"
+   version="1.1"
+   id="svg4"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs8" />
+  <path
+     d="M 17.883565,52.509611 H 210.30889 A 48.106327,48.106327 0 0 1 258.41521,4.4032849 48.106327,48.106327 0 0 1 306.52155,52.509611 h 192.4253 V 100.61594 H 474.89368 V 365.20073 H 336.588 l 42.09304,144.31899 H 330.5747 L 288.48167,365.20073 H 228.34876 L 186.25573,509.51972 H 138.1494 L 180.24244,365.20073 H 41.936731 V 100.61594 H 17.883565 V 52.509611 M 90.043062,100.61594 V 317.0944 H 426.78736 V 100.61594 Z"
+     id="path2"
+     fill="currentColor"
+     style="stroke-width:24.0531" />
+</svg>

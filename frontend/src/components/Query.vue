@@ -103,7 +103,7 @@
             <BoltSolid v-else />
             Exécuter
           </button>
-          <button title="Formater le code" class="btn" @click="format()">
+          <button title="Formater le code (shift + alt + F)" class="btn" @click="format()">
             <AlignLeftSolid />
           </button>
           <button
