@@ -1,6 +1,17 @@
 <template>
   <div class="db-preview-container">
     <router-link
+      v-for="d in missing"
+      :key="d.name"
+      class="db-preview"
+      :to="`/admin/questions/${d.name}`"
+    >
+      <div class="error">Missing: Database! has {{ d.nb }} questions</div>
+      <div class="title">
+        {{ d.name }}
+      </div>
+    </router-link>
+    <router-link
       v-for="d in databases"
       :key="d.name"
       class="db-preview"
@@ -55,14 +66,26 @@ export default {
   },
   setup() {
     const databases = ref([]);
+    const missing = ref([]);
+
     fetch(`${API_URL}/api/db/list`)
       .then((res) => res.json())
       .then((data) => {
         databases.value = data;
       });
 
+    fetch(`${API_URL}/api/db/missing`, {
+      method: "POST",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        missing.value = data;
+      });
+
     return {
       databases,
+      missing,
       API_URL,
       uploadSchemaPic(event, dbName) {
         var data = new FormData();

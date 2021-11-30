@@ -245,6 +245,23 @@ app.post("/api/evaluate/csv", jsonParser, (req, res) => {
 
 // ADMIN
 app.post(
+  "/api/db/missing",
+  passport.authenticate("basic", { session: false }),
+  async (req, res) => {
+    const result = await executeQuery(
+      res,
+      `SELECT db_schema as name, COUNT(*) as nb FROM questions
+    WHERE db_schema NOT IN (SELECT substring(datname from 5)
+            FROM pg_database
+            WHERE datname LIKE 'mpe_%')
+    GROUP BY db_schema
+    ORDER BY db_schema;`
+    );
+    result && res.json(result.rows);
+  }
+);
+
+app.post(
   "/api/db/:name",
   passport.authenticate("basic", { session: false }),
   async (req, res) => {
@@ -729,7 +746,7 @@ async function evaluateQuery(req, res, csv) {
   try {
     resultUser = await client.query({
       text: sqlToTest,
-      rowMode: "array"
+      rowMode: "array",
     });
     if (resultUser.rowCount > 0) {
       data.headers = resultUser.fields.map((h) => h.name);
