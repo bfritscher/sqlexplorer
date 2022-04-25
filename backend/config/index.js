@@ -9,7 +9,7 @@ const config = require(`./env.${env}.js`);
 
 config.knexDb = knex({
   client: "postgres",
-  connection: config.pgsql.user,
+  connection: config.pgsql.admin,
 });
 
 // Log the query that is executed by Knex expressions.
