@@ -38,11 +38,24 @@ Frontend has some configuration in `frontend/src/config.js`
 
 Some additonal variable can be configured in the `docker-compose.production.yml` file
 
-(docker-compose file assumes that a traefik container is already deployed on an exisitng web netowork)
+Traefik configuration `traefik/traefik.yml`
+
+```
+docker network create web
+touch traefik/acme.json
+chmod 600 traefik/acme.json
+```
 
 After running `docker-compose -f docker-compose.production.yml up --build ` the application will start and initialize the database.
 
 After that you can add your first database via PgAdmmin or any other PostgreSQL client.
+
+Setup db user for client queries
+```
+CREATE ROLE sqlexplorer_user WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE CONNECTION LIMIT -1 PASSWORD 'xxxxxx';
+ALTER ROLE sqlexplorer_user SET statement_timeout='60s';
+```
+
 After creating a database named `mpe_<name_to_display>` it will show up in the /admin/ part of the webclient and select permissions to the user can be automatically granted via the checkmark.
 
 ### LTI configuration example for moodle
