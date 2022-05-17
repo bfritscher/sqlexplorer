@@ -790,7 +790,10 @@ async function evaluateQuery(req, res, csv) {
   }
   let resultAnswer;
   try {
-    resultAnswer = await client.query(sqlAnswer);
+    resultAnswer = await client.query({
+      text: sqlAnswer,
+      rowMode: "array",
+    });
   } catch (err) {
     console.log("Error executing query sqlAnswer:", err);
     Raven.captureException(err);
@@ -809,14 +812,12 @@ async function evaluateQuery(req, res, csv) {
     // Check that the union of both requests does not yield any result
     const sanitizedSqlToTest = sqlToTest
       .replace(/;/g, "")
-      .toUpperCase()
-      .replace(/LIMIT\s+(.|\n)*/g, "")
-      .replace(/ORDER\s+BY(.|\n)*/g, "");
+      .replace(/LIMIT\s+(.|\n)*/gi, "")
+      .replace(/ORDER\s+BY(.|\n)*/gi, "");
     const sanitizedSqlAnswer = sqlAnswer
       .replace(/;/g, "")
-      .toUpperCase()
-      .replace(/LIMIT\s+(.|\n)*/g, "")
-      .replace(/ORDER\s+BY(.|\n)*/g, "");
+      .replace(/LIMIT\s+(.|\n)*/gi, "")
+      .replace(/ORDER\s+BY(.|\n)*/gi, "");
     const sqlSets = `(${sanitizedSqlAnswer} EXCEPT ${sanitizedSqlToTest}) UNION (${sanitizedSqlToTest} EXCEPT ${sanitizedSqlAnswer})`;
     try {
       resultSets = await client.query(sqlSets);
@@ -830,23 +831,14 @@ async function evaluateQuery(req, res, csv) {
     }
     //if the returned result is empty the user's query was certainly correct
     //if there is an order by we have to compare lines
-    if (sqlAnswer.toUpperCase().match(/ORDER\s+BY/)) {
-      var a, b;
+    if (sqlAnswer.match(/ORDER\s+BY/i)) {
       for (let r = 0; r < resultAnswer.rows.length; r++) {
-        const fields = Object.keys(resultAnswer.rows[r]);
-        for (let field of fields) {
-          a = resultAnswer.rows[r][field];
-          b = resultUser.rows[r][field];
-          if (a.constructor === Date) {
-            if (a.getTime() !== b.getTime()) {
-              sendAnswer(false, "Vérifier ordre");
-              return;
-            }
-          } else {
-            if (a !== b) {
-              sendAnswer(false, "Vérifier ordre");
-              return;
-            }
+        for (let c = 0; c < resultAnswer.rows[r].length; c++) {
+          const a = String(resultAnswer.rows[r][c]);
+          const b = String(resultUser.rows[r][c]);
+          if (a !== b) {
+            sendAnswer(false, "Vérifier ordre");
+            return;
           }
         }
       }
