@@ -180,13 +180,17 @@ app.get("/api/assignment/:id", async (req, res, next) => {
     [req.params.id]
   );
 
-  const questionSource = isAdmin ? "questions" : "question_schemas";
+  const questionSQL = isAdmin ? `SELECT aq.*, q.*, qs.schema FROM assignment_questions aq
+  JOIN questions q ON q.id = question_id
+  JOIN question_schemas qs ON q.id = qs.id
+  WHERE aq.assignment_id = $1
+  ORDER BY aq.aq_order` : `SELECT * FROM assignment_questions aq
+  JOIN question_schemas q ON q.id = question_id
+  WHERE aq.assignment_id = $1
+  ORDER BY aq.aq_order`;
   const questions = await executeQuery(
     res,
-    `SELECT * FROM assignment_questions aq
-      JOIN ${questionSource} q ON q.id = question_id
-      WHERE aq.assignment_id = $1
-      ORDER BY aq.aq_order`,
+    questionSQL,
     [req.params.id]
   );
   if (assignment && assignment.rows.length === 1 && questions) {
