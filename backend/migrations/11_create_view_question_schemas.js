@@ -5,7 +5,7 @@ exports.up = function (knex) {
       knex.raw(`SELECT questions.id,
       questions.db_schema,
       questions.text,
-      regexp_replace(regexp_replace(substring(sql from '^SELECT *(?:DISTINCT)? *(.*?) *FROM.*?'), ', .*? AS ',', ','gs'), '^.*? AS ', '', 'gs')
+      regexp_replace(regexp_replace(substring(sql from '^SELECT *(?:DISTINCT)? *(.*?) *FROM.*?'), ',[^,]*? AS ',', ','gs'), '^[^,]*? AS ', '', 'gs')
       FROM questions;`)
     );
   });
