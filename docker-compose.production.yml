@@ -11,6 +11,7 @@ services:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/traefik.yml:/traefik.yml
+      - ./traefik/conf.yml:/conf.yml
       - ./traefik/acme.json:/acme.json
     logging:
       driver: "json-file"
