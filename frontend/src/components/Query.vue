@@ -317,19 +317,19 @@ export default {
     });
     const isOver = computed(() => {
       if (isLti.value && assignment.value && assignment.value.end_date) {
-        const dateParsed = DateTime.fromISO(
+        const endDateParsed = DateTime.fromISO(
           assignment.value.end_date
         ).toLocal();
-        return dateParsed > new Date();
+        return new Date() > endDateParsed;
       }
       return false;
     });
     const isNotStarted = computed(() => {
       if (isLti.value && assignment.value && assignment.value.start_date) {
-        const dateParsed = DateTime.fromISO(
+        const startDateParsed = DateTime.fromISO(
           assignment.value.start_date
         ).toLocal();
-        return dateParsed > new Date();
+        return new Date() < startDateParsed;
       }
       return false;
     });
