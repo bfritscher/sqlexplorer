@@ -32,6 +32,7 @@ function getQuestionsWithState(assignmentId, ltiUserId) {
   const filteredState = knex("question_state")
     .select("is_correct", "question_id")
     .where("lti_user_id", ltiUserId)
+    .andWhere("assignment_id", assignmentId)
     .as("qst");
   return knex("question_schemas AS qs")
     .select("qs.*", "qst.*")
