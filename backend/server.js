@@ -248,6 +248,13 @@ app.post("/api/evaluate/csv", jsonParser, (req, res) => {
 });
 
 // ADMIN
+app.get("/api/login",
+  passport.authenticate("basic", { session: false }),
+  async (req, res) => {
+    res.json({ user: req.user });
+  }
+);
+
 app.post(
   "/api/db/missing",
   passport.authenticate("basic", { session: false }),
